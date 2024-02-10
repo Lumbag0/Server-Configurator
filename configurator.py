@@ -1,5 +1,4 @@
 import os
-from time import sleep
 
 def install_nvidia_drivers():
     os.system("apt update && apt upgrade -y")
@@ -11,9 +10,20 @@ def install_cuda_drivers():
     os.system("apt update")
     os.system("apt install cuda -y")
 
+def install_ssh():
+    os.system("sudo apt install openssh-server")
+    os.system("sudo systemctl enable ssh")
+
+def install_gpu_burn():
+    os.system("sudo apt install g++")
+    os.system("git clone https://github.com/wilicc/gpu-burn.git")
+    os.system("cd gpu-burn && make")
+
 def main():
     install_nvidia_drivers()
     install_cuda_drivers()
+    install_ssh()
+    install_gpu_burn()
     print("Please reboot your machine")
 
 if __name__ == '__main__':
