@@ -2,8 +2,7 @@ import os
 
 def install_nvidia_drivers():
     os.system("sudo apt update && sudo apt upgrade -y")
-    os.system("sudo apt install ubuntu-drivers-common")
-    os.system("sudo apt install nvidia-driver-535")
+    os.system("sudo ubuntu-drivers autoinstall")
 
 def install_cuda_drivers():
     os.system("sudo apt install gcc")
@@ -15,7 +14,6 @@ def install_cuda_drivers():
 def install_ssh():
     os.system("sudo apt install openssh-server")
     os.system("sudo systemctl enable ssh")
-
 
 def main():
     install_nvidia_drivers()
