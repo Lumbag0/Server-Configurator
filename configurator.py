@@ -1,8 +1,14 @@
 import os
+import sys
 
 # checks the euid if the user is root
 def check_root() -> bool:
     if os.geteuid() != 0:
+        return False
+    else:
+        return True
+def check_syntax() -> bool:
+    if len(sys.argv) < 3 or len(sys.argv) > 3
         return False
     else:
         return True
@@ -25,15 +31,40 @@ def install_ssh():
     os.system("sudo apt install openssh-server")
     os.system("sudo systemctl enable ssh")
 
+def help():
+    print("Usage: configurator.py -o <Install Type>")
+    print("Install Types:")
+    print("----------------------")
+    print("1. Generic Install")
+    print("2. GPU install")
+    print("----------------------")
+    print("Generic Install")
+    print("SSH")
+    # need to add other parts from ubuntu checklist
+    print("----------------------")
+    print("GPU Install")
+    print("SSH")
+    print("Nividia Drivers")
+    print("CUDA Drivers")
+    print("GPU-Burn")
+    # need to add other parts from ubuntu checklist
+
 def main():
     is_root = check_root()
-    if is_root == True:  
+    has_correct_syntax = check_syntax()
+    
+    if is_root == True and has_correct_syntax == True
         install_nvidia_drivers()
         install_cuda_drivers()
         install_ssh()
         print("Please reboot your machine")
-    else:
-        print("Please run this script with sudo")
+    
+    else if is_root == False and has_correct_syntax == True:
+        print("ERROR: Did you run with Sudo?")
+    
+    else if is_root == True and has_correct_syntax == False:
+        print("ERROR: Please select an option")
+        help()
 
 if __name__ == '__main__':
     main()
