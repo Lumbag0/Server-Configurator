@@ -1,3 +1,7 @@
+# TO DO:
+# Find way to overwrite common-session with current file in /etc/pam.d/
+# Find way to overwrite nsswitch.conf with current file in /etc/nsswitch.conf
+
 import os
 import sys
 import getopt
