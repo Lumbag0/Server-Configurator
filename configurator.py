@@ -1,23 +1,27 @@
 import os
 import sys
+import getopt
 from time import sleep
 
 # checks the euid if the user is root
+def update():
+    os.system("sudo apt update && sudo apt upgrade -y")
+
+def configure_ldap_client():
+    os.system("apt install ldap-auth-config")
+    # find way to modify files for NSS
+    # find way to add line for manual logins
+    # find way to setup automount
+    # find way to export Dirs
+
 def check_root() -> bool:
     if os.geteuid() != 0:
-        return False
+        return (False)
     else:
-        return True
-    
-def check_syntax() -> bool:
-    if len(sys.argv) < 3 or len(sys.argv) > 3:
-        return False
-    else:
-        return True
+        return (True)
 
 # updates the machine and installs the required drivers
 def install_nvidia_drivers():
-    os.system("sudo apt update && sudo apt upgrade -y")
     os.system("sudo ubuntu-drivers autoinstall")
 
 # installs gcc, g++ and cuda drives
@@ -40,13 +44,14 @@ def clone_gpu_burn():
     sleep(5)
 
 def help():
-    print("Usage: configurator.py -o <Install Type>")
-    print("Install Types:")
+    print("Usage: configurator.py <switch>")
+    print("Switches:")
     print("----------------------")
-    print("1. Generic Install")
-    print("2. GPU install")
+    print("-h: Displays this message")
+    print("-g: GPU Install")
+    print("-n: Normal Install")
     print("----------------------")
-    print("Generic Install")
+    print("Normal Install")
     print("SSH")
     # need to add other parts from ubuntu checklist
     print("----------------------")
@@ -58,51 +63,56 @@ def help():
 
 # components installed when dealing with GPU server
 def gpu_server_install():
-    #generic_server_install()
-    #install_nvidia_drivers()
-    #install_cuda_drivers()
+    generic_server_install()
+    install_nvidia_drivers()
+    install_cuda_drivers()
     clone_gpu_burn()
 
 # components installed when dealing with a regular server
 def generic_server_install():
+    update()
     install_ssh()
+    print(sys.argv[1])
+
+def test():
+    print(sys.argv[1])
 
 def main():
-    # returns true if the checks pass
-    is_root = check_root()
-    has_correct_syntax = check_syntax()
-    
-    # check if the boolean returned matches with the correct syntax
-    if is_root == True and has_correct_syntax == True:
-        selected_option = int(sys.argv[2])
+    check_sudo = check_root()
 
-        # depending on which option the user specified, a different path will be taken
-        if selected_option == 1:
-            print("Commencing Generic Server Install...")
-            sleep(10)
-            generic_server_install()
-            
-        elif selected_option == 2:
-            print("Commencing GPU Server Install...")
-            sleep(10)
-            gpu_server_install()
+    # remove first commandline arg
+    if(check_sudo == False):
+        print("ERROR: Are you sudo?")
+    else:         
+        argumentList = sys.argv[1:]
 
-        else:
-            print("ERROR: Please select a valid option")
-            help()
+        options = "hgn"
+        long_options = ["help", "gpu", "normal"]
 
-        print("Please reboot your machine")
-    
-    elif is_root == False:
-        print("ERROR: Did you run with Sudo?")
-    
-    elif is_root == True and has_correct_syntax == False:
-        print("ERROR: Please select an option")
-        help()
+        try:
+            # Parse arguments
+            arguments, values = getopt.getopt(argumentList, options, long_options)
 
-    else:
-        print("ERROR: Please see help menu")
-        help()
+
+            # checking each argument
+            for currentArgument, currentValue in arguments:
+        
+                if currentArgument in ("-h", "--help"):
+                    help()
+                
+                elif currentArgument in ("-g", "--gpu"):
+                    print("GPU Config Selected...")
+                    sleep(5)
+                    gpu_server_install()
+
+                elif currentArgument in ("-n", "--normal"):
+                    print("Normal Config Selected...")
+                    sleep(5)
+                    generic_server_install()
+
+        except getopt.error as err:
+            # output error, and return with an error code
+            print(str(err))
 
 if __name__ == '__main__':
     main()
