@@ -6,8 +6,8 @@ argumentList = sys.argv[1:]
 
 options = "hgn"
 long_options = ["help", "gpu", "normal"]  # Removed ':' from options that don't require arguments
-try:
 
+try:
     # Parse arguments
     arguments, values = getopt.getopt(argumentList, options, long_options)
 

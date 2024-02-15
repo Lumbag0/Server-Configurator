@@ -76,10 +76,6 @@ def gpu_server_install():
 def generic_server_install():
     update()
     install_ssh()
-    print(sys.argv[1])
-
-def test():
-    print(sys.argv[1])
 
 def main():
     check_sudo = check_root()
