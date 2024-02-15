@@ -1,5 +1,6 @@
 import os
 import sys
+from time import sleep
 
 # checks the euid if the user is root
 def check_root() -> bool:
@@ -7,8 +8,9 @@ def check_root() -> bool:
         return False
     else:
         return True
+    
 def check_syntax() -> bool:
-    if len(sys.argv) < 3 or len(sys.argv) > 3
+    if len(sys.argv) < 3 or len(sys.argv) > 3:
         return False
     else:
         return True
@@ -31,6 +33,12 @@ def install_ssh():
     os.system("sudo apt install openssh-server")
     os.system("sudo systemctl enable ssh")
 
+# clones gpu burn which stress tests graphics cards
+def clone_gpu_burn():
+    os.system("git clone https://github.com/wilicc/gpu-burn")
+    print("GPU-Burn was cloned in current directory...")
+    sleep(5)
+
 def help():
     print("Usage: configurator.py -o <Install Type>")
     print("Install Types:")
@@ -47,23 +55,53 @@ def help():
     print("Nividia Drivers")
     print("CUDA Drivers")
     print("GPU-Burn")
-    # need to add other parts from ubuntu checklist
+
+# components installed when dealing with GPU server
+def gpu_server_install():
+    #generic_server_install()
+    #install_nvidia_drivers()
+    #install_cuda_drivers()
+    clone_gpu_burn()
+
+# components installed when dealing with a regular server
+def generic_server_install():
+    install_ssh()
 
 def main():
+    # returns true if the checks pass
     is_root = check_root()
     has_correct_syntax = check_syntax()
     
-    if is_root == True and has_correct_syntax == True
-        install_nvidia_drivers()
-        install_cuda_drivers()
-        install_ssh()
+    # check if the boolean returned matches with the correct syntax
+    if is_root == True and has_correct_syntax == True:
+        selected_option = int(sys.argv[2])
+
+        # depending on which option the user specified, a different path will be taken
+        if selected_option == 1:
+            print("Commencing Generic Server Install...")
+            sleep(10)
+            generic_server_install()
+            
+        elif selected_option == 2:
+            print("Commencing GPU Server Install...")
+            sleep(10)
+            gpu_server_install()
+
+        else:
+            print("ERROR: Please select a valid option")
+            help()
+
         print("Please reboot your machine")
     
-    else if is_root == False and has_correct_syntax == True:
+    elif is_root == False:
         print("ERROR: Did you run with Sudo?")
     
-    else if is_root == True and has_correct_syntax == False:
+    elif is_root == True and has_correct_syntax == False:
         print("ERROR: Please select an option")
+        help()
+
+    else:
+        print("ERROR: Please see help menu")
         help()
 
 if __name__ == '__main__':
