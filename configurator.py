@@ -12,7 +12,7 @@ def update():
     os.system("sudo apt update && sudo apt upgrade -y")
 
 def configure_ldap_client():
-    os.system("apt install ldap-auth-config")
+    os.system("apt install ldap-auth-config -y")
     # find way to modify files for NSS
     # find way to add line for manual logins
     # find way to setup automount
@@ -30,7 +30,7 @@ def install_nvidia_drivers():
 
 # installs gcc, g++ and cuda drives
 def install_cuda_drivers():
-    os.system("sudo apt install gcc g++")
+    os.system("sudo apt install gcc g++ -y")
     os.system("wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb")
     os.system("sudo dpkg -i cuda-keyring_1.1-1_all.deb")
     os.system("sudo apt update")
