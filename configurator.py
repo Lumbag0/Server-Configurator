@@ -7,17 +7,29 @@ import sys
 import getopt
 from time import sleep
 
-# checks the euid if the user is root
 def update():
     os.system("sudo apt update && sudo apt upgrade -y")
 
 def configure_ldap_client():
-    os.system("apt install ldap-auth-config -y")
-    # find way to modify files for NSS
-    # find way to add line for manual logins
-    # find way to setup automount
-    # find way to export Dirs
+    os.system("sudo apt install ldap-auth-config -y")
 
+def configure_nfs():
+    # add commands to configure nfs
+
+def configure_nullmailer():
+    os.system("sudo apt install nullmailer mailutils -y")
+    os.system("echo sysadmin@vast.uccs.edu > /etc/nullmailer/adminaddr")
+    os.system("echo vast.uccs.edu > /etc/nullmailer/defaultdomain")
+    os.system("echo mail.vast.uccs.edu > /etc/nullmailer/remotes")
+    print("Testing the install")
+    sleep(5)
+    os.system("echo THIS IS A TEST | mail sysadmin@vast.uccs.edu")
+    #add commands to configure mail
+
+def install_sysmon():
+    #add commands to install sysmon tools
+
+# checks the euid if the user is root
 def check_root() -> bool:
     if os.geteuid() != 0:
         return (False)
@@ -36,11 +48,6 @@ def install_cuda_drivers():
     os.system("sudo apt update")
     os.system("sudo apt install cuda -y")
 
-# install ssh
-def install_ssh():
-    os.system("sudo apt install openssh-server")
-    os.system("sudo systemctl enable ssh")
-
 # clones gpu burn which stress tests graphics cards
 def clone_gpu_burn():
     os.system("git clone https://github.com/wilicc/gpu-burn")
@@ -56,11 +63,11 @@ def help():
     print("-n: Normal Install")
     print("----------------------")
     print("Normal Install")
-    print("SSH")
+
     # need to add other parts from ubuntu checklist
     print("----------------------")
     print("GPU Install")
-    print("SSH")
+
     print("Nividia Drivers")
     print("CUDA Drivers")
     print("GPU-Burn")
@@ -75,7 +82,7 @@ def gpu_server_install():
 # components installed when dealing with a regular server
 def generic_server_install():
     update()
-    install_ssh()
+    configure_nullmailer()
 
 def main():
     check_sudo = check_root()
