@@ -8,23 +8,39 @@ import getopt
 from time import sleep
 
 def update():
+    print("\nUpgrading System...\n")
+    sleep(5)
     os.system("sudo apt update && sudo apt upgrade -y")
 
 def configure_ldap_client():
     os.system("sudo apt install ldap-auth-config -y")
 
 def configure_nfs():
+    print("\nConfiguring Autofs...\n")
+    sleep(5)
+    os.system("apt install autofs -y")
+    os.system("mv /etc/auto.master /etc/auto.master.old")
+    os.system("echo '/net /etc/auto.net' > /etc/auto.master")
+    os.system("mkdir /net")
+    os.system("ln -s /net /nfs")
+    os.system("rm -r /home")
+    os.system("ln -s /net/kato/store/home /home")
+    print("\nrestarting autofs daemon...\n")
+    sleep(5)
+    os.system("service autofs reload")
     # add commands to configure nfs
 
 def configure_nullmailer():
+    print("\nConfiguring Nullmailer...\n")
+    sleep(5)
     os.system("sudo apt install nullmailer mailutils -y")
     os.system("echo sysadmin@vast.uccs.edu > /etc/nullmailer/adminaddr")
     os.system("echo vast.uccs.edu > /etc/nullmailer/defaultdomain")
     os.system("echo mail.vast.uccs.edu > /etc/nullmailer/remotes")
+    
     print("Testing the install")
     sleep(5)
     os.system("echo THIS IS A TEST | mail sysadmin@vast.uccs.edu")
-    #add commands to configure mail
 
 def install_sysmon():
     #add commands to install sysmon tools
@@ -39,20 +55,17 @@ def check_root() -> bool:
 # updates the machine and installs the required drivers
 def install_nvidia_drivers():
     os.system("sudo ubuntu-drivers autoinstall")
+    os.system("sudo apt install nvidia-cuda-toolkit -y")
 
 # installs gcc, g++ and cuda drives
 def install_cuda_drivers():
+    print("\nInstalling CUDA drivers...\n")
+    sleep(5)
     os.system("sudo apt install gcc g++ -y")
     os.system("wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb")
     os.system("sudo dpkg -i cuda-keyring_1.1-1_all.deb")
     os.system("sudo apt update")
     os.system("sudo apt install cuda -y")
-
-# clones gpu burn which stress tests graphics cards
-def clone_gpu_burn():
-    os.system("git clone https://github.com/wilicc/gpu-burn")
-    print("GPU-Burn was cloned in current directory...")
-    sleep(5)
 
 def help():
     print("Usage: configurator.py <switch>")
@@ -77,12 +90,13 @@ def gpu_server_install():
     generic_server_install()
     install_nvidia_drivers()
     install_cuda_drivers()
-    clone_gpu_burn()
 
 # components installed when dealing with a regular server
 def generic_server_install():
     update()
+    configure_ldap_client()
     configure_nullmailer()
+    configure_nfs()
 
 def main():
     check_sudo = check_root()
