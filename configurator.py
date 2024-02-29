@@ -13,8 +13,14 @@ def update():
     os.system("sudo apt update && sudo apt upgrade -y")
 
 def configure_ldap_client():
+    print("\nStarting LDAP Setup\n")
+    sleep(5)
     os.system("sudo apt install ldap-auth-config -y")
-
+    os.system("sudo apt install libpam-ldap nscd -y")
+    os.system("sudo mv common-session /etc/pam.d/")
+    os.system("sudo mv nsswitch.conf /etc/")
+    os.system("/etc/init.d/nscd restart")
+    
 def configure_nfs():
     print("\nConfiguring Autofs...\n")
     sleep(5)
