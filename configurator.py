@@ -61,17 +61,13 @@ def check_root() -> bool:
 # updates the machine and installs the required drivers
 def install_nvidia_drivers():
     os.system("sudo ubuntu-drivers autoinstall")
-    os.system("sudo apt install nvidia-cuda-toolkit -y")
 
 # installs gcc, g++ and cuda drives
 def install_cuda_drivers():
     print("\nInstalling CUDA drivers...\n")
     sleep(5)
-    os.system("sudo apt install gcc g++ -y")
-    os.system("wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb")
-    os.system("sudo dpkg -i cuda-keyring_1.1-1_all.deb")
-    os.system("sudo apt update")
-    os.system("sudo apt install cuda -y")
+    os.system("sudo apt install nvidia-cuda-toolkit -y")
+
 
 def help():
     print("Usage: configurator.py <switch>")
