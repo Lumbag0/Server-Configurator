@@ -1,7 +1,3 @@
-# TO DO:
-# Find way to overwrite common-session with current file in /etc/pam.d/
-# Find way to overwrite nsswitch.conf with current file in /etc/nsswitch.conf
-
 import os
 import sys
 import getopt
@@ -49,7 +45,10 @@ def configure_nullmailer():
     os.system("echo THIS IS A TEST | mail sysadmin@vast.uccs.edu")
 
 def install_sysmon():
-    #add commands to install sysmon tools
+    print("\nInstalling sysmon tools")
+    sleep(5)
+    os.system("sudo apt install smartmontools")
+
 
 # checks the euid if the user is root
 def check_root() -> bool:
@@ -60,6 +59,9 @@ def check_root() -> bool:
 
 # updates the machine and installs the required drivers
 def install_nvidia_drivers():
+    print"\nPurging nvidia drivers
+    sleep(5)
+    os.system("sudo apt remove --purge '^nvidia-.*’")
     os.system("sudo ubuntu-drivers autoinstall")
 
 # installs gcc, g++ and cuda drives
@@ -99,6 +101,7 @@ def generic_server_install():
     configure_ldap_client()
     configure_nullmailer()
     configure_nfs()
+    install_sysmon()
 
 def main():
     check_sudo = check_root()
