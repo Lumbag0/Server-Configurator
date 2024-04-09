@@ -59,7 +59,7 @@ def check_root() -> bool:
 
 # updates the machine and installs the required drivers
 def install_nvidia_drivers():
-    print"\nPurging nvidia drivers
+    print("\nPurging nvidia drivers")
     sleep(5)
     os.system("sudo apt remove --purge '^nvidia-.*’")
     os.system("sudo ubuntu-drivers autoinstall")
