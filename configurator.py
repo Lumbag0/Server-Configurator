@@ -11,11 +11,12 @@ def update():
 def configure_ldap_client():
     print("\nStarting LDAP Setup\n")
     sleep(5)
-    os.system("sudo apt install ldap-auth-config -y")
-    os.system("sudo apt install libpam-ldap nscd -y")
-    os.system("sudo mv common-session /etc/pam.d/")
-    os.system("sudo mv nsswitch.conf /etc/")
-    os.system("/etc/init.d/nscd restart")
+    os.system("sudo sh -c 'echo -n | openssl s_client -connect kato.vast.uccs.edu:636 | " "sed -ne \'/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p\' > " "/usr/local/share/ca-certificates/ldap_ca_server.crt'")
+    os.system("sudo update-ca-certificates")
+    os.system("sudo apt install sssd-ldap ldap-utils libsss-sudo")
+    os.system("sudo install -m 600 /dev/null /etc/sssd/sssd.conf")
+    os.system("sudo cp sssd.conf /etc/sssd/")
+    os.system("sudo systemctl restart sssd")
     
 def configure_nfs():
     print("\nConfiguring Autofs...\n")
